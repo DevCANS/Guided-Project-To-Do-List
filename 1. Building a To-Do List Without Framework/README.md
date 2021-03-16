@@ -3,7 +3,7 @@
 
 ## Making the Structure
 
-1. Open your favourite text editor and create a file named `index.html` in your desired folder.
+1. Open your favourite text editor and create a file named `index.html` in the `submission` folder.
 
 2. If you are using VSCode or any editor with `emmet` plugin installed you can type `!` and hit `Enter` to generate a HTML5 boilerplate to develop your page.
    [Learn More About The Generated Boilerplate](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics#anatomy_of_an_html_document)
@@ -88,8 +88,12 @@ We will be using the first one
     ```
     [Learn about Template Strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
     
-    We will define the `deleteItem` and 
-    `markItem` events later.
+    We will define the `deleteItem` and `markItem` functions later. 
+    The `onclick` and `onchange` attributes are used to run the corresponding javascript function on `click` and `change` events of the html element.
+
+    [See the various ways of registering Event Listeners](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Events#dom_event_handler_list)
+
+    [See The List of Events](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing)
 
 5. Now we need to add the items that will be added in the `todoList` array to the `todo-list` div. Let us create function to render the items
     ```javascript
@@ -134,7 +138,7 @@ We will be using the first one
 7. Now lets write the functions to remove and mark items in the todoList array and render the list.
     ```javascript
     function markItem(event){
-        const itemId = event.target.parent.id // getting the id of the parent element to search in the array
+        const itemId = event.target.parentElement.id // getting the id of the parent element to search in the array
         todoList.some(function(todoItem){
             if(todoItem.id === itemId)
             {
@@ -146,7 +150,7 @@ We will be using the first one
     }
 
     function deleteItem(event){
-        const itemId = event.target.parent.id // getting the id of the parent element to search in the array
+        const itemId = event.target.parentElement.id // getting the id of the parent element to search in the array
         todoList.some(function(todoItem, i){
             if(todoItem.id === itemId)
             {
@@ -160,5 +164,41 @@ We will be using the first one
     About [Array.some](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some) and 
     [Array.splice](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
 
-Later we will store the `todoList` array in the browser's cache so that we don't lose the information on refresh
 
+## Storing Information in Web Storage API
+We can store the `todoList` array using the [`Web Storage API`](`https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API`) so that we don't lose the information on refresh
+1. Create a `button` of `id` of `save-todo` to save the todo list in the [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). 
+   
+   **Note:** This button should not be placed inside a form.
+
+2. Create a function to handle the `click` event of the `button` and save the todo list in the `localStorage`
+    ```javascript
+    function saveTodo(e)
+    {
+        e.preventDefault()
+        localStorage.setItem('todoList', JSON.stringify(todoList))
+    }
+    ```
+    The data stored in `localStorage` is in key/value pair of string. So we need to convert the `Array` to JSON string using [`JSON.stringify`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) method. We can get back the original array using [`JSON.parse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse)
+
+3. Now register the function to listen for `click` events. You can use `[target].addEventListener` method or set the `onclick` attribute to the `button` tag.
+
+4. Now the last step is to check for any value in the `localStorage` while initializing the `todoList` Array
+    ```javascript
+    let todoList = []   
+    try{
+        if(localStorage.getItem('todoList'))
+        {
+            todoList = JSON.parse(localStorage.getItem('todoList'))
+            renderList()
+        }
+    }catch(e)
+    {
+        console.log(e)
+    }
+    ```
+    Using [`try catch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch) to handle any errors.
+
+## Optional Tasks
+   - Similar to the `Save` button to save the `todoList` to `localStorage`. Create a `Clear` button to remove the `todoList` item in `localStorage`
+   - We have stored a timestamp property for every todo item. This timestamp is a `number` which is the number of milliseconds elapsed since [`January 1, 1970 00:00:00 UTC`](https://en.wikipedia.org/wiki/Unix_time). You need to parse the number and show it with each todo item in this format `HH:MM DD/MM/YYYY` .
