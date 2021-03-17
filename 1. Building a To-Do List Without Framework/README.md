@@ -35,16 +35,19 @@
     [List of Attributes in input tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#htmlattrdefplaceholder)
 
 6. Now create a `div` to hold the todo list just below the closing `form` tag. Give the `div` an `id` of `todo-list`.
+   
+7. Feel free to add [`CSS`](https://developer.mozilla.org/en-US/docs/Web/CSS) to your app and style it to your likings.
+
 
 ## Adding Javascript
 
-Now to add and remove items in the todo list, we will be using [javascript](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics)
+Now to add and remove items in the todo list, we will be using [javascript](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics).
 
 We can use JavaScript code in HTML using two ways.
    - We can either include the JavaScript code internally within the HTML document itself.
    - We can keep the JavaScript code in a separate external file and then point to that file from the HTML document.
 
-We will be using the first one
+We will be using the first one but feel free to try the [second method](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_JavaScript_within_a_webpage#linking_an_external_script) also. 
 
 1. Add a [`script`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script) tag just before the closing `body` tag. This is where we will write javascript code.
 
@@ -201,4 +204,4 @@ We can store the `todoList` array using the [`Web Storage API`](`https://develop
 
 ## Optional Tasks
    - Similar to the `Save` button to save the `todoList` to `localStorage`. Create a `Clear` button to remove the `todoList` item in `localStorage`
-   - We have stored a timestamp property for every todo item. This timestamp is a `number` which is the number of milliseconds elapsed since [`January 1, 1970 00:00:00 UTC`](https://en.wikipedia.org/wiki/Unix_time). You need to parse the number and show it with each todo item in this format `HH:MM DD/MM/YYYY` .
+   - We have stored a timestamp property for every todo item. This timestamp is a `number` which is the number of milliseconds elapsed since [`January 1, 1970 00:00:00 UTC`](https://en.wikipedia.org/wiki/Unix_time). You need to parse the number and show it with each todo item in this format `HH:MM DD/MM/YYYY`.

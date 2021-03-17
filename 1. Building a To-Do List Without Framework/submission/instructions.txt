@@ -3,4 +3,5 @@ You are required to make changes in this folder only and raise a PR
 
 For this task you can deploy your app on netlify.
 - Just create an account on app.netlify.com
-- And drag and drop the `submission` folder in the dashboard
+- Drag and drop the `submission` folder in the dashboard
+Note: You can also simplify this process using the `netlify-cli` tool which requires NodeJS
