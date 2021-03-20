@@ -206,3 +206,4 @@ We can store the `todoList` array using the [`Web Storage API`](`https://develop
    - Similar to the `Save` button to save the `todoList` to `localStorage`. Create a `Clear` button to remove the `todoList` item in `localStorage`
    - We have stored a timestamp property for every todo item. This timestamp is a `number` which is the number of milliseconds elapsed since [`January 1, 1970 00:00:00 UTC`](https://en.wikipedia.org/wiki/Unix_time). You need to parse the number and show it with each todo item in this format `HH:MM DD/MM/YYYY`.
    - Create an `Edit` button for each `todoItem` to edit it. You can also store a `modified` property in each `todoItem` to store the last modified timestamp and show it in the UI. You can use [`window.prompt()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/prompt) to get user input.
+   - Show the checked items and unchecked items in separate lists
