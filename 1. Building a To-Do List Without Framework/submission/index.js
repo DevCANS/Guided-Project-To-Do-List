@@ -1,108 +1,132 @@
 let todoList = [];
 
-            function generateTodoItem(itemName) {
-                const timestamp = Date.now();
-                return {
-                    id: "todo-item-" + timestamp,
-                    name: itemName,
-                    timestamp,
-                    isDone: false,
-                };
-            }
+const generateTodoItem = (itemName) => {
+    const timeStamp = Date.now();
+    return {
+        id: "todo-item-" + timeStamp,
+        name: itemName,
+        timeStamp,
+        isDone: false,
+    };
+};
 
-            function todoElement(item, i) {
-                const elem = document.createElement("div");
-                elem.id = item.id;
-                elem.innerHTML = `
-                <div class="row py-2 pb-2 text-center" data-aos="fade-up">
-                    <div class="col-3 text-center">${i + 1}</div>
-                    <div class="col-3"> <input type="checkbox" onchange="markItem(event)" ${
+const todoElement = (item, i) => {
+    const elem = document.createElement("div");
+    elem.id = item.id;
+    elem.innerHTML = `
+            <div class="row py-2 pb-2 text-center">
+                <div class="col-3 text-center">${i + 1}</div>
+                <div class="col-3" id=${item.id}>
+                    <input type="checkbox" onchange="markItem(event)" ${
                         item.isDone ? "checked" : ""
-                    }/></div>
-                    <div class="col-3">${item.name}</div>
-                    <div class="col-3" id=${
-                        item.id
-                    }><button class="btn btn-outline-danger" onclick="deleteItem(event)">Delete Item</button></div>
+                    }/>
                 </div>
-                             `;
-                return elem;
-            }
+                <div class="col-3">${item.name}</div>
+                <div class="col-3" id=${item.id}>
+                    <button class="btn btn-outline-danger" onclick="deleteItem(event)">Delete Item</button>
+                </div>
+            </div> `;
+    return elem;
+};
 
-            function renderList() {
-                const listElement = document.getElementById("todo-list");
+const renderList = () => {
+    const listElement = document.getElementById("todo-list");
+    listElement.innerHTML = "";
+    for (let i = 0; i < todoList.length; i++) {
+        const todoItem = todoElement(todoList[i], i);
+        listElement.appendChild(todoItem);
+    }
+};
 
-                listElement.innerHTML = "";
+document.getElementById("todo-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const itemName = event.target["todo-input"].value;
+    if (itemName) {
+        todoList.push(generateTodoItem(itemName));
+        renderList();
+        const alert = `
+                <div class="text-center alert alert-success alert-dismissible fade show shadow border-0" role="alert"  data-aos="fade-down">
+                    <strong>Congratulations, your item has been added. Save Changes.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+        $("#confirmation").html(alert);
+        event.target.reset();
+    }
+});
 
-                for (let i = 0; i < todoList.length; i++) {
-                    const todoItem = todoElement(todoList[i], i);
-                    listElement.appendChild(todoItem);
-                }
+const markItem = (event) => {
+    const itemId = event.target.parentElement.id; // getting the id of the parent element to search in the array
+    todoList.some((todoItem) => {
+        if (todoItem.id === itemId) {
+            todoItem.isDone = !todoItem.isDone;
+            renderList();
 
-                let alert = `
-                <div class="text-center alert ${
-                    isAdded
-                        ? "alert-success"
-                        : "alert-danger"
-                } alert-dismissible fade show shadow border-0" role="alert"  data-aos="fade-down">
-                        <strong>${
-                            isAdded
-                                ? "Congraluations, Your item has been added."
-                                : "Your item has been deleted."
-                        }
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>`;
+            return true;
+        }
+    });
+};
+
+const deleteItem = (event) => {
+    const itemId = event.target.parentElement.id; // getting the id of the parent element to search in the array
+    todoList.some((todoItem, i) => {
+        if (todoItem.id === itemId) {
+            const approveDelete = confirm(
+                "Delete this item. If not then press cancel to undo"
+            ); //taking input from user if they sure want to delete
+            if (approveDelete) {
+                todoList.splice(i, 1);
+                renderList();
+                saveTodo();
+                const alert = `
+                <div class="text-center alert alert-danger alert-dismissible fade show shadow border-0" role="alert"  data-aos="fade-down">
+                    <strong>Your item has been removed.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
                 $("#confirmation").html(alert);
             }
+            return true;
+        }
+    });
+};
 
-            document
-                .getElementById("todo-form")
-                .addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    const itemName = event.target["todo-input"].value;
-                    if (itemName) {
-                        todoList.push(generateTodoItem(itemName));
-                        isAdded = true;
-                        renderList();
-                        event.target.reset();
+const saveTodo = (e) => {
+    localStorage.setItem("todoList", JSON.stringify(todoList)); // key and its value
+    const saveInfo = `
+                <div class="text-center alert alert-primary alert-dismissible fade show shadow border-0" role="alert"  data-aos="zoom-in-down">
+                    <strong>${
+                        todoList.length > 0
+                            ? "Your changes have been successfully saved."
+                            : "Please add any item."
                     }
-                });
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+    $("#save-info").html(saveInfo);
+};
 
-            function markItem(event) {
-                const itemId = event.target.parentElement.id; // getting the id of the parent element to search in the array
-                todoList.some(function (todoItem) {
-                    if (todoItem.id === itemId) {
-                        todoItem.isDone = !todoItem.isDone;
-                        renderList();
-                        return true;
-                    }
-                });
-            }
-
-            function deleteItem(event) {
-                isAdded = false;
-                const itemId = event.target.parentElement.id; // getting the id of the parent element to search in the array
-                todoList.some(function (todoItem, i) {
-                    if (todoItem.id === itemId) {
-                        todoList.splice(i, 1);
-                        renderList();
-                        return true;
-                    }
-                });
-            }
-
-            function saveTodo(e) {
-                localStorage.setItem("todoList", JSON.stringify(todoList));
-            }
-            function deleteTodo(e) {
-                localStorage.clear();
-                location.reload();
-            }
-
-            try {
-                if (localStorage.getItem("todoList")) {
-                    todoList = JSON.parse(localStorage.getItem("todoList"));
-                    renderList();
+const clearTodo = () => {
+    const clearInfo = `
+                <div class="text-center alert alert-primary alert-dismissible fade show shadow border-0" role="alert"  data-aos="zoom-in-down">
+                <strong>${
+                    todoList.length > 0
+                        ? "Your items have been successfully removed."
+                        : "Please add any item."
                 }
-            } catch (e) {
-                console.log(e);
-            }
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+    $("#save-info").html(clearInfo);
+    todoList.length > 0 // if array length is null then do not show confirm msg.
+        ? `${confirm("Are you sure you want to delete your all items")}
+                ${localStorage.removeItem("todoList")}
+                ${(todoList = [])} // array made empty
+                ${renderList()}`
+        : "";
+};
+
+try {
+    if (localStorage.getItem("todoList")) {
+        todoList = JSON.parse(localStorage.getItem("todoList"));
+        renderList();
+    }
+} catch (e) {
+    console.log(e);
+}
