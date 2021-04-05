@@ -14,7 +14,7 @@ const todoElement = (item, i) => {
     const elem = document.createElement("div");
     elem.id = item.id;
     elem.innerHTML = `
-            <div class="row py-2 pb-2 text-center">
+            <div class="row py-2 text-center">
                 <div class="col-3 text-center">${i + 1}</div>
                 <div class="col-3" id=${item.id}>
                     <input type="checkbox" onchange="markItem(event)" ${
@@ -44,9 +44,10 @@ document.getElementById("todo-form").addEventListener("submit", (event) => {
     if (itemName) {
         todoList.push(generateTodoItem(itemName));
         renderList();
+        saveTodo();
         const alert = `
                 <div class="text-center alert alert-success alert-dismissible fade show shadow border-0" role="alert"  data-aos="fade-down">
-                    <strong>Congratulations, your item has been added. Save Changes.
+                    <strong>Congratulations, your item has been added.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`;
         $("#confirmation").html(alert);
@@ -60,7 +61,7 @@ const markItem = (event) => {
         if (todoItem.id === itemId) {
             todoItem.isDone = !todoItem.isDone;
             renderList();
-
+            saveTodo();
             return true;
         }
     });
@@ -89,7 +90,7 @@ const deleteItem = (event) => {
     });
 };
 
-const saveTodo = (e) => {
+const saveTodo = () => {
     localStorage.setItem("todoList", JSON.stringify(todoList)); // key and its value
     const saveInfo = `
                 <div class="text-center alert alert-primary alert-dismissible fade show shadow border-0" role="alert"  data-aos="zoom-in-down">
@@ -104,22 +105,28 @@ const saveTodo = (e) => {
 };
 
 const clearTodo = () => {
-    const clearInfo = `
-                <div class="text-center alert alert-primary alert-dismissible fade show shadow border-0" role="alert"  data-aos="zoom-in-down">
-                <strong>${
-                    todoList.length > 0
-                        ? "Your items have been successfully removed."
-                        : "Please add any item."
-                }
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>`;
-    $("#save-info").html(clearInfo);
-    todoList.length > 0 // if array length is null then do not show confirm msg.
-        ? `${confirm("Are you sure you want to delete your all items")}
-                ${localStorage.removeItem("todoList")}
-                ${(todoList = [])} // array made empty
+        if (todoList.length){
+            const approveClear = confirm("Are you sure you want to delete your all items");
+            if(approveClear){
+                `${localStorage.removeItem("todoList")}
+                ${(todoList = [])}
                 ${renderList()}`
-        : "";
+                const clearInfo = `
+                <div class="text-center alert alert-primary alert-dismissible fade show shadow border-0" role="alert"  data-aos="zoom-in-down">
+                <strong>Your items have been successfully removed.</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;            
+    $("#save-info").html(clearInfo);
+            }
+        }
+        else{
+            const clearInfo = `
+                <div class="text-center alert alert-primary alert-dismissible fade show shadow border-0" role="alert"  data-aos="zoom-in-down">
+                <strong>Please add any item</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`; 
+    $("#save-info").html(clearInfo);
+        }
 };
 
 try {

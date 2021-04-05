@@ -20,6 +20,7 @@
         <div class="container-fluid">
             <div class="py-5"></div>
             <div class="py-2" id="save-info"></div>
+            <div id="confirmation" class="pt-2"></div>
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
                     <button
@@ -73,16 +74,18 @@
                                     <div class="modal-footer">
                                         <button
                                             type="button"
-                                            class="btn btn-outline-danger fw-bold"
+                                            class="btn btn-outline-danger"
                                             data-bs-dismiss="modal"
                                         >
                                             Close
                                         </button>
                                         <button
                                             type="submit"
-                                            class="btn btn-outline-success fw-bold"
+                                            class="btn btn-outline-success"
+                                            id="save-todo"
+                                            onclick="{saveTodo()}"
                                         >
-                                            Save
+                                            SAVE CHANGES
                                         </button>
                                     </div>
                                 </form>
@@ -91,19 +94,8 @@
                     </div>
                 </div>
             </div>
-            <div id="confirmation" class="pt-5"></div>
-            <div id="todo-list" data-aos="fade-up"></div>
-
-            <div class="d-flex justify-content-center py-5 pt-5">
-                <button
-                    class="btn btn-outline-success"
-                    id="save-todo"
-                    onclick="{saveTodo()}"
-                >
-                    Save Changes
-                </button>
-            </div>
-            <div class="d-flex justify-content-center">
+            <div class="pt-5" id="todo-list" data-aos="fade-up"></div>
+            <div class="d-flex justify-content-center pt-3">
                 <button
                     class="btn btn-outline-success"
                     id="delete-todo"
